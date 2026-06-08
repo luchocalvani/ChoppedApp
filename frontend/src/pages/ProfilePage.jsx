@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [ok, setOk] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     const loadMe = async () => {
@@ -61,10 +62,10 @@ export default function ProfilePage() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Seguro que quieres eliminar tu cuenta? Esta accion es irreversible.')) return;
     const result = await deleteMyAccount();
     if (!result.success) {
       setError(result.error || 'No se pudo eliminar la cuenta');
+      setConfirmDelete(false);
     }
   };
 
@@ -111,9 +112,23 @@ export default function ProfilePage() {
           {ok && <p className="ok-msg">{ok}</p>}
           {error && <p className="error-msg">{error}</p>}
 
-          <button onClick={handleDelete} className="delete-account-btn">
-            Eliminar mi cuenta
-          </button>
+          {!confirmDelete ? (
+            <button onClick={() => setConfirmDelete(true)} className="delete-account-btn">
+              Eliminar mi cuenta
+            </button>
+          ) : (
+            <div className="delete-confirm">
+              <p className="delete-confirm-text">Esta accion es irreversible. ¿Seguro que quieres eliminar tu cuenta?</p>
+              <div className="delete-confirm-actions">
+                <button onClick={handleDelete} className="delete-account-btn">
+                  Si, eliminar
+                </button>
+                <button onClick={() => setConfirmDelete(false)} className="cancel-btn">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

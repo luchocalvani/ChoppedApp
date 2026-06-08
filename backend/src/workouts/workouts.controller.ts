@@ -35,8 +35,11 @@ export class WorkoutsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.workoutsService.findOne(id);
+  findOne(
+    @Req() req: Request & { user: { userId: string } },
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ) {
+    return this.workoutsService.findOne(id, req.user.userId);
   }
 
   @Patch(':id')

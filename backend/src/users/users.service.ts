@@ -26,6 +26,7 @@ export class UsersService {
       alias: user.alias ?? null,
       profileImageUrl: user.profileImageUrl ?? null,
       email: user.email,
+      isAdmin: user.isAdmin,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -90,6 +91,9 @@ export class UsersService {
     user.alias = updateUserDto.alias ?? user.alias;
     user.profileImageUrl = updateUserDto.profileImageUrl ?? user.profileImageUrl;
     user.email = updateUserDto.email ?? user.email;
+    if (updateUserDto.isAdmin !== undefined) {
+      user.isAdmin = updateUserDto.isAdmin;
+    }
 
     const updatedUser = await this.usersRepository.save(user);
     return this.toResponseDto(updatedUser);

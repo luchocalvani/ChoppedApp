@@ -9,26 +9,29 @@ import {
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'varchar', length: 255 })
-  name: string;
+  name!: string;
 
   @Column({ type: 'varchar', length: 120, nullable: true })
-  alias: string | null;
+  alias!: string | null;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  profileImageUrl: string | null;
+  profileImageUrl!: string | null;
 
   @Column({ type: 'varchar', length: 255, unique: true })
-  email: string;
+  email!: string;
 
   @Column({ type: 'varchar', length: 255 })
-  passwordHash: string;
+  passwordHash!: string;
+
+  @Column({ type: 'boolean', default: false })
+  isAdmin!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

@@ -10,11 +10,11 @@ import { Type } from 'class-transformer';
 class WorkoutExerciseItemDto {
   @IsString()
   @IsNotEmpty()
-  exerciseId: string;
+  exerciseId!: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString()

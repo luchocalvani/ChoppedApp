@@ -50,10 +50,13 @@ export class WorkoutsService {
     return workouts.map((w) => this.toResponseDto(w));
   }
 
-  async findOne(id: string): Promise<WorkoutResponseDto> {
+  async findOne(id: string, userId: string): Promise<WorkoutResponseDto> {
     const workout = await this.workoutsRepository.findOne({ where: { id } });
     if (!workout) {
       throw new NotFoundException(`Rutina con ID ${id} no encontrada`);
+    }
+    if (workout.userId !== userId) {
+      throw new ForbiddenException('No puedes ver rutinas de otros usuarios');
     }
     return this.toResponseDto(workout);
   }

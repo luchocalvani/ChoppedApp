@@ -8,19 +8,19 @@ import {
 @Entity('training_sessions')
 export class TrainingSession {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  userId: string;
+  userId!: string;
 
   @Column()
-  workoutId: string;
+  workoutId!: string;
 
   @Column({ type: 'varchar', length: 255 })
-  workoutName: string;
+  workoutName!: string;
 
   @Column({ type: 'jsonb', default: () => "'[]'" })
-  entries: Array<{
+  entries!: Array<{
     exerciseId: string;
     name: string;
     done: boolean;
@@ -29,5 +29,5 @@ export class TrainingSession {
   }>;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 }

@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import TrainingHistoryPage from './pages/TrainingHistoryPage';
 import GymMapPage from './pages/GymMapPage';
+import AdminPage from './pages/AdminPage';
 
 import './App.css';
 
@@ -105,6 +106,15 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={!!me}>
                 <GymMapPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute isAuthenticated={!!me}>
+                {me?.isAdmin ? <AdminPage /> : <Navigate to="/dashboard" />}
               </ProtectedRoute>
             }
           />

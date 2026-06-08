@@ -151,6 +151,49 @@
   box-shadow: 0 4px 16px rgba(224, 53, 53, 0.3);
 }
 
+.delete-confirm {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(224, 53, 53, 0.4);
+  background: rgba(224, 53, 53, 0.06);
+}
+
+.delete-confirm-text {
+  font-size: 13px;
+  color: var(--error);
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.delete-confirm-actions .delete-account-btn {
+  margin-top: 0;
+  flex: 1;
+}
+
+.cancel-btn {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 11px 16px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover { background: rgba(255,255,255,0.1); }
+
 .ok-msg {
   margin-top: 10px;
   color: var(--success);

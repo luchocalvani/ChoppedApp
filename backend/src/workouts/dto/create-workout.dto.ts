@@ -10,11 +10,11 @@ import { Type } from 'class-transformer';
 class WorkoutExerciseItemDto {
   @IsString()
   @IsNotEmpty()
-  exerciseId: string;
+  exerciseId!: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString()
@@ -36,10 +36,10 @@ class WorkoutExerciseItemDto {
 export class CreateWorkoutDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => WorkoutExerciseItemDto)
-  exercises: WorkoutExerciseItemDto[];
+  exercises!: WorkoutExerciseItemDto[];
 }

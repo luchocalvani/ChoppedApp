@@ -53,6 +53,14 @@ export default function TechniquePage() {
   const startedAtRef = useRef(0);
   const samplesRef = useRef([]);
 
+  // Resetear estado al cambiar de ejercicio
+  useEffect(() => {
+    repCountRef.current = 0;
+    phaseRef.current = 'up';
+    samplesRef.current = [];
+    setAngles(null);
+  }, [mode]);
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);

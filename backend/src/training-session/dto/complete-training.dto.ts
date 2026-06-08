@@ -12,31 +12,31 @@ import { Type } from 'class-transformer';
 class TrainingEntryDto {
   @IsString()
   @IsNotEmpty()
-  exerciseId: string;
+  exerciseId!: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsBoolean()
-  done: boolean;
+  done!: boolean;
 
   @IsNumber()
   @Min(0)
-  repsDone: number;
+  repsDone!: number;
 
   @IsNumber()
   @Min(0)
-  weightKg: number;
+  weightKg!: number;
 }
 
 export class CompleteTrainingDto {
   @IsString()
   @IsNotEmpty()
-  workoutId: string;
+  workoutId!: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TrainingEntryDto)
-  entries: TrainingEntryDto[];
+  entries!: TrainingEntryDto[];
 }

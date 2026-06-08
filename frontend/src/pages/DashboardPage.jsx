@@ -1,10 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import '../styles/Dashboard.css';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { me, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <div className="dashboard-container">
@@ -13,6 +20,9 @@ export default function DashboardPage() {
           C<span className="logo-h">H<span className="logo-icon" /></span>OPPEDAPP
         </h1>
         <p className="dashboard-tagline">Fitness tracker</p>
+          <button className="theme-toggle-btn" onClick={toggleTheme} title="Cambiar tema">
+            {theme === 'dark' ? '☀ Modo claro' : '☾ Modo oscuro'}
+          </button>
       </section>
 
       <div className="dashboard-grid">
@@ -108,7 +118,22 @@ export default function DashboardPage() {
         </button>
 
 
-        <button className="dashboard-item danger" onClick={logout}>
+        {me?.isAdmin && (
+          <button className="dashboard-item" onClick={() => navigate('/admin')}>
+            <div className="item-inner">
+              <div className="item-left">
+                <span className="item-icon">🛡️</span>
+                <div>
+                  <div className="item-label">Panel Admin</div>
+                  <div className="item-sub">Gestionar usuarios</div>
+                </div>
+              </div>
+              <span className="item-arrow">›</span>
+            </div>
+          </button>
+        )}
+
+        <button className="dashboard-item danger" onClick={handleLogout}>
           <div className="item-inner">
             <div className="item-left">
               <span className="item-icon">⏻</span>

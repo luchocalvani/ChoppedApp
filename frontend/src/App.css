@@ -30,6 +30,9 @@
   /* Shadows */
   --shadow-blue: 0 8px 32px rgba(61, 139, 239, 0.2);
   --shadow-blue-sm: 0 4px 12px rgba(61, 139, 239, 0.15);
+
+  /* Theme-specific */
+  --nav-bg: rgba(10, 22, 40, 0.92);
 }
 
 * {
@@ -275,7 +278,7 @@ body {
   left: 0;
   right: 0;
   height: 72px;
-  background: rgba(10, 22, 40, 0.92);
+  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
@@ -318,4 +321,103 @@ body {
 @media (max-width: 480px) {
   .auth-card { padding: 28px 20px; }
   .auth-title { font-size: 38px; }
+}
+
+/* ─── Light Mode ─────────────────────────────────────────── */
+
+[data-theme="light"] {
+  --bg-primary:     #f0f4fa;
+  --bg-secondary:   #ffffff;
+  --bg-tertiary:    #e4ecf7;
+  --blue-dark:      #d4e6fa;
+  --blue-darker:    #e8f2fd;
+  --blue-accent:    #9dbbd8;
+  --blue-light:     #4a7098;
+  --blue-bright:    #2876d4;
+  --text-primary:   #0d1f35;
+  --text-muted:     #5a7490;
+  --border:         rgba(40, 118, 212, 0.2);
+  --border-hover:   rgba(40, 118, 212, 0.5);
+  --shadow-blue:    0 8px 32px rgba(40, 118, 212, 0.15);
+  --shadow-blue-sm: 0 4px 12px rgba(40, 118, 212, 0.1);
+  --nav-bg:         rgba(240, 244, 250, 0.95);
+}
+
+/* Nav */
+[data-theme="light"] .bottom-nav {
+  border-top-color: rgba(40, 118, 212, 0.12);
+}
+
+/* Auth inputs */
+[data-theme="light"] .auth-input,
+[data-theme="light"] .auth-tabs {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Dashboard cards */
+[data-theme="light"] .dashboard-item {
+  background: #ffffff;
+  border-color: rgba(40, 118, 212, 0.18);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .dashboard-item.danger {
+  background: rgba(224, 53, 53, 0.04);
+  border-color: rgba(224, 53, 53, 0.28);
+}
+[data-theme="light"] .dashboard-item.primary {
+  background: linear-gradient(135deg, var(--blue-bright) 0%, #1e60b8 100%);
+}
+
+/* Workout preset card */
+[data-theme="light"] .workout-card-preset {
+  background: rgba(40, 118, 212, 0.05);
+  border-color: rgba(40, 118, 212, 0.3);
+}
+
+/* Generic ghost / input backgrounds */
+[data-theme="light"] .ghost-btn,
+[data-theme="light"] .switch-btn,
+[data-theme="light"] .cancel-btn,
+[data-theme="light"] .technique-back-btn,
+[data-theme="light"] .clear-history-btn {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .auth-input,
+[data-theme="light"] .profile-input,
+[data-theme="light"] .form-input,
+[data-theme="light"] .small-input,
+[data-theme="light"] .technique-controls select,
+[data-theme="light"] .marks-col input {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Card / panel subtle backgrounds */
+[data-theme="light"] .search-box,
+[data-theme="light"] .result-item,
+[data-theme="light"] .history-item,
+[data-theme="light"] .technique-live-panel,
+[data-theme="light"] .pose-feedback-card,
+[data-theme="light"] .history-table th,
+[data-theme="light"] .exercise-table th,
+[data-theme="light"] .cart-item,
+[data-theme="light"] .selected-table-wrap {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* GIF placeholder backgrounds */
+[data-theme="light"] .train-gif,
+[data-theme="light"] .result-gif,
+[data-theme="light"] .table-gif {
+  background: #dce8f5;
+}
+
+/* Camera overlays */
+[data-theme="light"] .pose-loading-overlay {
+  background: rgba(224, 235, 248, 0.88);
+  color: var(--text-primary);
+}
+[data-theme="light"] .pose-live-badge {
+  background: rgba(224, 235, 248, 0.9);
+  color: var(--blue-bright);
 }

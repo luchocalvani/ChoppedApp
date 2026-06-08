@@ -11,25 +11,25 @@ import { User } from '../users/entities/user.entity';
 @Entity('workouts')
 export class Workout {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'varchar', length: 255 })
-  name: string;
+  name!: string;
 
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
-  user: User;
+  user!: User;
 
   @Column()
-  userId: string;
+  userId!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @Column({ type: 'jsonb', default: () => "'[]'" })
-  exercises: Array<{
+  exercises!: Array<{
     exerciseId: string;
     name: string;
     bodyPart?: string;
