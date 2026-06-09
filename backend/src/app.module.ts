@@ -12,6 +12,7 @@ import { TrainingSessionsModule } from './training-session/entities/training-ses
 import { GymsModule } from './gyms/gyms.module';
 import { StoreModule } from './store/store.module';
 import { AchievementsModule } from './achievements/achievements.module';
+import { DbLogger } from './db-logger';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { AchievementsModule } from './achievements/achievements.module';
         database: configService.get<string>('DB_NAME', 'chopped'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        logging: true,
+        logger: new DbLogger(),
       }),
     }),
     UsersModule,

@@ -110,7 +110,7 @@ export default function DashboardPage() {
                     <span className="item-icon">🗺️</span>
                   <div>
                       <div className="item-label">Mapa de gimnasios</div>
-                <div className="item-sub">CABA (OpenStreetMap + Leaflet)</div>
+                <div className="item-sub">gyms (google maps)</div>
              </div>
             </div>
             <span className="item-arrow">›</span>
