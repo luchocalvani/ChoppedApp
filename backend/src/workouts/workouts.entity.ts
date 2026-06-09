@@ -28,6 +28,14 @@ export class Workout {
   @UpdateDateColumn()
   updatedAt!: Date;
 
+  // Days of week: 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat
+  @Column({ type: 'simple-array', nullable: true, default: null })
+  scheduleDays!: number[] | null;
+
+  // Local Argentina time, e.g. "16:00"
+  @Column({ type: 'varchar', length: 5, nullable: true, default: null })
+  scheduleTime!: string | null;
+
   @Column({ type: 'jsonb', default: () => "'[]'" })
   exercises!: Array<{
     exerciseId: string;

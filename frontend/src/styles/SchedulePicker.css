@@ -1,0 +1,68 @@
+.schedule-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.schedule-days {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.schedule-day-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.schedule-day-btn:hover {
+  border-color: rgba(61, 139, 239, 0.5);
+  color: var(--text-primary);
+}
+
+.schedule-day-btn.active {
+  background: var(--blue-bright);
+  border-color: var(--blue-bright);
+  color: #fff;
+}
+
+.schedule-time-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.schedule-time-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  min-width: 40px;
+}
+
+.schedule-time-input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.schedule-time-input:focus {
+  outline: none;
+  border-color: var(--blue-bright);
+}

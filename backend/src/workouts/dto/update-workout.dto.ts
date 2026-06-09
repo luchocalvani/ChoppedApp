@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -44,4 +45,13 @@ export class UpdateWorkoutDto {
   @ValidateNested({ each: true })
   @Type(() => WorkoutExerciseItemDto)
   exercises?: WorkoutExerciseItemDto[];
+
+  @IsOptional()
+  @IsArray()
+  scheduleDays?: number[];
+
+  @IsOptional()
+  @IsString()
+  @Matches(/^\d{2}:\d{2}$/)
+  scheduleTime?: string;
 }

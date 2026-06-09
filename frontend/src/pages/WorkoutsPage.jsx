@@ -5,6 +5,8 @@ import PRESET_WORKOUTS from '../data/presetWorkouts';
 import ExerciseGif from '../components/ExerciseGif';
 import '../styles/Workouts.css';
 
+const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+
 export default function WorkoutsPage() {
   const navigate = useNavigate();
   const [myWorkouts, setMyWorkouts] = useState([]);
@@ -93,6 +95,16 @@ export default function WorkoutsPage() {
         {workout.name}
         {isPreset && <span className="preset-badge">Predeterminada</span>}
       </h3>
+      {!isPreset && workout.scheduleDays?.length > 0 && (
+        <p className="workout-schedule-info">
+          {workout.scheduleDays
+            .slice()
+            .sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b))
+            .map((d) => DAY_NAMES[d])
+            .join(', ')}{' '}
+          · {workout.scheduleTime} hs
+        </p>
+      )}
 
       <table className="exercise-table">
         <thead>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import ExerciseGif from '../components/ExerciseGif';
+import SchedulePicker from '../components/SchedulePicker';
 import '../styles/CreateWorkout.css';
 
 export default function CreateWorkoutPage() {
@@ -14,6 +15,9 @@ export default function CreateWorkoutPage() {
   const [selectedExercises, setSelectedExercises] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [scheduleDays, setScheduleDays] = useState([]);
+  const [scheduleTime, setScheduleTime] = useState('08:00');
 
   const searchExercises = async () => {
     if (!search.trim()) return;
@@ -84,6 +88,9 @@ export default function CreateWorkoutPage() {
       await api.post('/workouts', {
         name: workoutName.trim(),
         exercises: cleanExercises,
+        ...(showSchedule && scheduleDays.length > 0
+          ? { scheduleDays, scheduleTime }
+          : {}),
       });
 
       navigate('/workouts');
@@ -192,6 +199,29 @@ export default function CreateWorkoutPage() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              )}
+            </div>
+
+            <div className="schedule-section">
+              <button
+                type="button"
+                className={`schedule-toggle-btn ${showSchedule ? 'active' : ''}`}
+                onClick={() => setShowSchedule((v) => !v)}
+              >
+                {showSchedule ? 'Quitar programacion' : 'Programar rutina'}
+              </button>
+              {showSchedule && (
+                <div className="schedule-box">
+                  <p className="schedule-hint">
+                    Selecciona los dias y la hora. Recibirás un email recordatorio 30 minutos antes.
+                  </p>
+                  <SchedulePicker
+                    days={scheduleDays}
+                    time={scheduleTime}
+                    onDaysChange={setScheduleDays}
+                    onTimeChange={setScheduleTime}
+                  />
                 </div>
               )}
             </div>

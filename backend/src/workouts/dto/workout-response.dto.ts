@@ -10,6 +10,8 @@ export class WorkoutResponseDto {
     gifUrl?: string;
   }>;
   userId!: string;
+  scheduleDays!: number[] | null;
+  scheduleTime!: string | null;
   createdAt!: Date;
   updatedAt!: Date;
 }

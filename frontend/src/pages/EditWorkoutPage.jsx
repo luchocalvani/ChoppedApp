@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../services/api';
 import ExerciseGif from '../components/ExerciseGif';
+import SchedulePicker from '../components/SchedulePicker';
 import '../styles/CreateWorkout.css';
 
 export default function EditWorkoutPage() {
@@ -16,6 +17,9 @@ export default function EditWorkoutPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [scheduleDays, setScheduleDays] = useState([]);
+  const [scheduleTime, setScheduleTime] = useState('08:00');
 
   useEffect(() => {
     const loadWorkout = async () => {
@@ -25,6 +29,11 @@ export default function EditWorkoutPage() {
         const { data } = await api.get(`/workouts/${id}`);
         setWorkoutName(data.name || '');
         setSelectedExercises(Array.isArray(data.exercises) ? data.exercises : []);
+        if (data.scheduleDays?.length > 0) {
+          setShowSchedule(true);
+          setScheduleDays(data.scheduleDays);
+          setScheduleTime(data.scheduleTime || '08:00');
+        }
       } catch (err) {
         const msg = err?.response?.data?.message;
         setError(Array.isArray(msg) ? msg.join(', ') : msg || 'No se pudo cargar la rutina');
@@ -105,6 +114,8 @@ export default function EditWorkoutPage() {
       await api.patch(`/workouts/${id}`, {
         name: workoutName.trim(),
         exercises: cleanExercises,
+        scheduleDays: showSchedule && scheduleDays.length > 0 ? scheduleDays : [],
+        scheduleTime: showSchedule && scheduleDays.length > 0 ? scheduleTime : null,
       });
 
       navigate('/workouts');
@@ -214,6 +225,29 @@ export default function EditWorkoutPage() {
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            <div className="schedule-section">
+              <button
+                type="button"
+                className={`schedule-toggle-btn ${showSchedule ? 'active' : ''}`}
+                onClick={() => setShowSchedule((v) => !v)}
+              >
+                {showSchedule ? 'Quitar programacion' : 'Programar rutina'}
+              </button>
+              {showSchedule && (
+                <div className="schedule-box">
+                  <p className="schedule-hint">
+                    Selecciona los dias y la hora. Recibirás un email recordatorio 30 minutos antes.
+                  </p>
+                  <SchedulePicker
+                    days={scheduleDays}
+                    time={scheduleTime}
+                    onDaysChange={setScheduleDays}
+                    onTimeChange={setScheduleTime}
+                  />
+                </div>
+              )}
             </div>
 
             {error && <p className="error-msg">{error}</p>}

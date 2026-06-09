@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -12,6 +13,7 @@ import { TrainingSessionsModule } from './training-session/entities/training-ses
 import { GymsModule } from './gyms/gyms.module';
 import { StoreModule } from './store/store.module';
 import { AchievementsModule } from './achievements/achievements.module';
+import { SchedulerModule } from './scheduler/scheduler.module';
 import { DbLogger } from './db-logger';
 
 @Module({
@@ -21,6 +23,7 @@ import { DbLogger } from './db-logger';
       envFilePath: '.env',
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -44,6 +47,7 @@ import { DbLogger } from './db-logger';
     GymsModule,
     StoreModule,
     AchievementsModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

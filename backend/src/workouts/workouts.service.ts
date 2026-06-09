@@ -18,11 +18,17 @@ export class WorkoutsService {
   ) {}
 
   private toResponseDto(workout: Workout): WorkoutResponseDto {
+    const days = workout.scheduleDays;
     return {
       id: workout.id,
       name: workout.name,
       exercises: workout.exercises ?? [],
       userId: workout.userId,
+      // simple-array stores values as strings; cast back to numbers
+      scheduleDays: Array.isArray(days) && days.length > 0
+        ? days.map(Number).filter((n) => !isNaN(n))
+        : null,
+      scheduleTime: workout.scheduleTime ?? null,
       createdAt: workout.createdAt,
       updatedAt: workout.updatedAt,
     };
