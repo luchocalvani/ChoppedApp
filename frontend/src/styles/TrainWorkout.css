@@ -39,6 +39,22 @@
   cursor: pointer;
 }
 
+.abandon-btn {
+  border: 1px solid rgba(224, 53, 53, 0.4);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: rgba(224, 53, 53, 0.08);
+  color: var(--error, #e03535);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.abandon-btn:hover {
+  background: rgba(224, 53, 53, 0.18);
+}
+
 .train-list {
   display: grid;
   gap: 10px;

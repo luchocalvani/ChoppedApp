@@ -13,6 +13,7 @@ export default function WorkoutsPage() {
   const [error, setError] = useState('');
   const [section, setSection] = useState('mine'); // mine | preset
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [inProgress, setInProgress] = useState([]);
 
   const loadWorkouts = async () => {
     setLoading(true);
@@ -67,8 +68,23 @@ export default function WorkoutsPage() {
     }
   };
 
+  const loadInProgress = () => {
+    const keys = Object.keys(localStorage).filter((k) => k.startsWith('chp_wp_'));
+    const progress = keys.map((k) => {
+      try { return JSON.parse(localStorage.getItem(k)); }
+      catch { return null; }
+    }).filter(Boolean);
+    setInProgress(progress);
+  };
+
+  const abandonProgress = (workoutId) => {
+    localStorage.removeItem(`chp_wp_${workoutId}`);
+    setInProgress((prev) => prev.filter((p) => p.workoutId !== workoutId));
+  };
+
   useEffect(() => {
     loadWorkouts();
+    loadInProgress();
   }, []);
 
   const renderWorkoutCard = (workout, isPreset = false) => (
@@ -149,6 +165,43 @@ export default function WorkoutsPage() {
             <button onClick={() => navigate('/workouts/crear')} className="create-btn">Crear nueva rutina</button>
           </div>
         </div>
+
+        {inProgress.length > 0 && (
+          <section className="workouts-section inprogress-section">
+            <h2 className="section-title">Rutinas en curso</h2>
+            <div className="workouts-grid">
+              {inProgress.map((p) => {
+                const done = (p.entries || []).filter((e) => e.done).length;
+                const total = (p.entries || []).length;
+                return (
+                  <div key={p.workoutId} className="workout-card workout-card-inprogress">
+                    <h3 className="workout-title">{p.workoutName}</h3>
+                    <p className="inprogress-meta">
+                      {done}/{total} ejercicios completados
+                      {p.startedAt && (
+                        <> · Iniciada el {new Date(p.startedAt).toLocaleDateString('es-AR')}</>
+                      )}
+                    </p>
+                    <div className="workout-actions">
+                      <button
+                        className="train-btn"
+                        onClick={() => navigate(`/workouts/${p.workoutId}/train`)}
+                      >
+                        Continuar
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => abandonProgress(p.workoutId)}
+                      >
+                        Abandonar
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         <div className="workouts-switch">
           <button

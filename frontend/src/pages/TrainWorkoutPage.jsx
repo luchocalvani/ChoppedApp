@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../services/api';
 import ExerciseGif from '../components/ExerciseGif';
 import '../styles/TrainWorkout.css';
+
+const storageKey = (id) => `chp_wp_${id}`;
 
 export default function TrainWorkoutPage() {
   const navigate = useNavigate();
@@ -15,23 +17,50 @@ export default function TrainWorkoutPage() {
   const [error, setError] = useState('');
   const [reward, setReward] = useState(null);
 
+  // Tracks when entries are ready to be persisted (avoids saving before load)
+  const readyToPersist = useRef(false);
+
   useEffect(() => {
     const loadWorkout = async () => {
       setLoading(true);
       setError('');
+      readyToPersist.current = false;
       try {
         const { data } = await api.get(`/workouts/${id}`);
         setWorkout(data);
 
-        const initEntries = (data.exercises || []).map((ex) => ({
-          exerciseId: ex.exerciseId,
-          name: ex.name,
-          done: false,
-          repsDone: 0,
-          weightKg: 0,
-          gifUrl: ex.gifUrl || '',
-        }));
+        const key = storageKey(id);
+        const saved = localStorage.getItem(key);
+        let initEntries;
+
+        if (saved) {
+          try {
+            initEntries = JSON.parse(saved).entries;
+          } catch {
+            localStorage.removeItem(key);
+            initEntries = null;
+          }
+        }
+
+        if (!initEntries) {
+          initEntries = (data.exercises || []).map((ex) => ({
+            exerciseId: ex.exerciseId,
+            name: ex.name,
+            done: false,
+            repsDone: 0,
+            weightKg: 0,
+            gifUrl: ex.gifUrl || '',
+          }));
+          localStorage.setItem(key, JSON.stringify({
+            workoutId: id,
+            workoutName: data.name,
+            entries: initEntries,
+            startedAt: new Date().toISOString(),
+          }));
+        }
+
         setEntries(initEntries);
+        readyToPersist.current = true;
       } catch (err) {
         const msg = err?.response?.data?.message;
         setError(Array.isArray(msg) ? msg.join(', ') : msg || 'No se pudo cargar la rutina');
@@ -43,18 +72,24 @@ export default function TrainWorkoutPage() {
     loadWorkout();
   }, [id]);
 
-  const completedCount = useMemo(
-    () => entries.filter((e) => e.done).length,
-    [entries],
-  );
+  // Persist entries to localStorage on every change
+  useEffect(() => {
+    if (!readyToPersist.current || entries.length === 0) return;
+    const key = storageKey(id);
+    const saved = localStorage.getItem(key);
+    if (!saved) return;
+    try {
+      const parsed = JSON.parse(saved);
+      localStorage.setItem(key, JSON.stringify({ ...parsed, entries }));
+    } catch { /* ignore */ }
+  }, [entries, id]);
 
+  const completedCount = useMemo(() => entries.filter((e) => e.done).length, [entries]);
   const allDone = entries.length > 0 && completedCount === entries.length;
 
   const toggleDone = (exerciseId) => {
     setEntries((prev) =>
-      prev.map((e) =>
-        e.exerciseId === exerciseId ? { ...e, done: !e.done } : e,
-      ),
+      prev.map((e) => e.exerciseId === exerciseId ? { ...e, done: !e.done } : e),
     );
   };
 
@@ -67,6 +102,11 @@ export default function TrainWorkoutPage() {
           : e,
       ),
     );
+  };
+
+  const abandon = () => {
+    localStorage.removeItem(storageKey(id));
+    navigate('/workouts');
   };
 
   const finishTraining = async () => {
@@ -89,6 +129,7 @@ export default function TrainWorkoutPage() {
         })),
       });
 
+      localStorage.removeItem(storageKey(id));
       setReward({ pointsEarned: data.pointsEarned, newAchievements: data.newAchievements || [] });
       setTimeout(() => navigate('/training-history'), 2500);
     } catch (err) {
@@ -106,7 +147,10 @@ export default function TrainWorkoutPage() {
       <div className="train-card">
         <div className="train-top">
           <h1>Entrenar: {workout?.name || 'Rutina'}</h1>
-          <button className="ghost-btn" onClick={() => navigate('/workouts')}>Volver</button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="ghost-btn" onClick={() => navigate('/workouts')}>Volver</button>
+            <button className="abandon-btn" onClick={abandon}>Abandonar</button>
+          </div>
         </div>
 
         <p className="progress-text">
