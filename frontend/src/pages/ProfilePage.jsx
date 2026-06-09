@@ -17,6 +17,7 @@ export default function ProfilePage() {
   const [error, setError] = useState('');
   const [ok, setOk] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [stats, setStats] = useState({ points: 0, xp: 0, level: 1, achievementCount: 0 });
 
   useEffect(() => {
     const loadMe = async () => {
@@ -24,11 +25,21 @@ export default function ProfilePage() {
       setLoading(true);
       setError('');
       try {
-        const { data } = await api.get(`/users/${me.userId}`);
+        const [userRes, achRes] = await Promise.all([
+          api.get(`/users/${me.userId}`),
+          api.get('/achievements'),
+        ]);
+        const data = userRes.data;
         setName(data.name || '');
         setAlias(data.alias || '');
         setProfileImageUrl(data.profileImageUrl || '');
         setEmail(data.email || '');
+        setStats({
+          points: data.points ?? 0,
+          xp: data.xp ?? 0,
+          level: data.level ?? 1,
+          achievementCount: achRes.data.count ?? 0,
+        });
       } catch (err) {
         const msg = err?.response?.data?.message;
         setError(Array.isArray(msg) ? msg.join(', ') : msg || 'Error al cargar perfil');
@@ -101,6 +112,23 @@ export default function ProfilePage() {
           <button onClick={() => navigate('/dashboard')} className="back-btn">
             Volver al dashboard
           </button>
+
+          {!loading && (
+            <div className="profile-stats">
+              <div className="profile-stat">
+                <span className="profile-stat-val">Nivel {stats.level}</span>
+                <span className="profile-stat-lbl">Nivel</span>
+              </div>
+              <div className="profile-stat">
+                <span className="profile-stat-val">{stats.xp} XP</span>
+                <span className="profile-stat-lbl">Experiencia</span>
+              </div>
+              <div className="profile-stat profile-stat-link" onClick={() => navigate('/achievements')}>
+                <span className="profile-stat-val">{stats.achievementCount}</span>
+                <span className="profile-stat-lbl">Logros →</span>
+              </div>
+            </div>
+          )}
 
           {loading ? (
             <p>Cargando perfil...</p>

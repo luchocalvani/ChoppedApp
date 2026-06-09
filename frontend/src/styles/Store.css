@@ -242,6 +242,60 @@
   box-shadow: 0 8px 24px rgba(6, 214, 160, 0.35);
 }
 
+.store-points-badge {
+  padding: 8px 16px;
+  background: rgba(6, 214, 160, 0.12);
+  border: 1px solid rgba(6, 214, 160, 0.3);
+  border-radius: var(--r-md);
+  color: var(--success);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.product-owned {
+  opacity: 0.65;
+  border-color: rgba(6, 214, 160, 0.3) !important;
+}
+
+.owned-badge {
+  width: 100%;
+  padding: 10px;
+  background: rgba(6, 214, 160, 0.1);
+  border: 1px solid rgba(6, 214, 160, 0.3);
+  border-radius: var(--r-sm);
+  color: var(--success);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.store-msg {
+  max-width: 1400px;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+.store-msg-ok {
+  background: rgba(6, 214, 160, 0.1);
+  border: 1px solid rgba(6, 214, 160, 0.3);
+  color: var(--success);
+}
+
+.store-msg-err {
+  background: rgba(224, 53, 53, 0.1);
+  border: 1px solid rgba(224, 53, 53, 0.3);
+  color: var(--error);
+}
+
 @media (max-width: 768px) {
   .store-content { grid-template-columns: 1fr; }
   .cart-sidebar { position: static; }

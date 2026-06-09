@@ -5,6 +5,9 @@ export class UserResponseDto {
   profileImageUrl!: string | null;
   email!: string;
   isAdmin!: boolean;
+  points!: number;
+  xp!: number;
+  level!: number;
   createdAt!: Date;
   updatedAt!: Date;
 }

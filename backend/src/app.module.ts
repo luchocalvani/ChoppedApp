@@ -10,6 +10,8 @@ import { UsersModule } from './users/users.module';
 import { WorkoutsModule } from './workouts/workouts.module';
 import { TrainingSessionsModule } from './training-session/entities/training-session.module';
 import { GymsModule } from './gyms/gyms.module';
+import { StoreModule } from './store/store.module';
+import { AchievementsModule } from './achievements/achievements.module';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { GymsModule } from './gyms/gyms.module';
     ExercisesModule,
     TrainingSessionsModule,
     GymsModule,
+    StoreModule,
+    AchievementsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

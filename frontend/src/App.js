@@ -13,6 +13,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import TrainingHistoryPage from './pages/TrainingHistoryPage';
 import GymMapPage from './pages/GymMapPage';
 import AdminPage from './pages/AdminPage';
+import CollectiblesPage from './pages/CollectiblesPage';
+import AchievementsPage from './pages/AchievementsPage';
 
 import './App.css';
 
@@ -110,6 +112,22 @@ function App() {
             }
           />
 
+          <Route
+            path="/collectibles"
+            element={
+              <ProtectedRoute isAuthenticated={!!me}>
+                <CollectiblesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/achievements"
+            element={
+              <ProtectedRoute isAuthenticated={!!me}>
+                <AchievementsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/admin"
             element={

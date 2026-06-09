@@ -29,6 +29,15 @@ export class User {
   @Column({ type: 'boolean', default: false })
   isAdmin!: boolean;
 
+  @Column({ type: 'int', default: 0 })
+  points!: number;
+
+  @Column({ type: 'int', default: 0 })
+  xp!: number;
+
+  @Column({ type: 'int', default: 1 })
+  level!: number;
+
   @CreateDateColumn()
   createdAt!: Date;
 

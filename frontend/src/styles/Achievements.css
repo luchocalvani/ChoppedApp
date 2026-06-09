@@ -1,0 +1,118 @@
+.ach-container {
+  padding: 28px 20px;
+  background: var(--bg-primary);
+  min-height: calc(100vh - 72px);
+}
+
+.ach-header {
+  max-width: 900px;
+  margin: 0 auto 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ach-header h1 {
+  font-size: 36px;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  line-height: 1;
+}
+
+.ach-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ach-back-btn {
+  padding: 11px 20px;
+  background: rgba(61, 139, 239, 0.12);
+  border: 1px solid rgba(61, 139, 239, 0.3);
+  border-radius: 8px;
+  color: var(--blue-bright);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ach-back-btn:hover {
+  background: rgba(61, 139, 239, 0.2);
+  border-color: var(--blue-bright);
+}
+
+.ach-empty {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.ach-empty span {
+  font-size: 56px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.ach-empty p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.ach-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.ach-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.2s;
+}
+
+.ach-card:hover {
+  border-color: rgba(255, 200, 0, 0.35);
+}
+
+.ach-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.ach-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ach-info strong {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.ach-milestone {
+  color: #ffd700;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.ach-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}

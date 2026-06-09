@@ -1,0 +1,25 @@
+.collectibles-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  position: relative;
+  z-index: 1;
+}
+
+.collectibles-empty span {
+  font-size: 56px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.collectibles-empty p {
+  margin: 0 0 20px;
+  font-size: 16px;
+}
+
+.collectible-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  letter-spacing: 0.04em;
+}

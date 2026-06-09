@@ -27,6 +27,9 @@ export class UsersService {
       profileImageUrl: user.profileImageUrl ?? null,
       email: user.email,
       isAdmin: user.isAdmin,
+      points: user.points ?? 0,
+      xp: user.xp ?? 0,
+      level: user.level ?? 1,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

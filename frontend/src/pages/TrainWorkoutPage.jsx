@@ -13,6 +13,7 @@ export default function TrainWorkoutPage() {
   const [loading, setLoading] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [error, setError] = useState('');
+  const [reward, setReward] = useState(null);
 
   useEffect(() => {
     const loadWorkout = async () => {
@@ -77,7 +78,7 @@ export default function TrainWorkoutPage() {
     setFinishing(true);
     setError('');
     try {
-      await api.post('/training-sessions/complete', {
+      const { data } = await api.post('/training-sessions/complete', {
         workoutId: id,
         entries: entries.map((e) => ({
           exerciseId: e.exerciseId,
@@ -88,7 +89,8 @@ export default function TrainWorkoutPage() {
         })),
       });
 
-      navigate('/training-history');
+      setReward({ pointsEarned: data.pointsEarned, newAchievements: data.newAchievements || [] });
+      setTimeout(() => navigate('/training-history'), 2500);
     } catch (err) {
       const msg = err?.response?.data?.message;
       setError(Array.isArray(msg) ? msg.join(', ') : msg || 'No se pudo guardar el entrenamiento');
@@ -152,9 +154,23 @@ export default function TrainWorkoutPage() {
 
         {error && <p className="error-msg">{error}</p>}
 
+        {reward && (
+          <div className="train-reward">
+            <span className="train-reward-pts">+{reward.pointsEarned} pts</span>
+            {reward.newAchievements.length > 0 && (
+              <div className="train-reward-ach">
+                {reward.newAchievements.map((a) => (
+                  <span key={a}>🏅 {a}</span>
+                ))}
+              </div>
+            )}
+            <p>Redirigiendo al historial...</p>
+          </div>
+        )}
+
         <button
           className="finish-btn"
-          disabled={!allDone || finishing}
+          disabled={!allDone || finishing || !!reward}
           onClick={finishTraining}
         >
           {finishing ? 'Guardando...' : 'Terminar entrenamiento'}
