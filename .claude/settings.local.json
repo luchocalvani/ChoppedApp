@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:overpass-api.de)",
+      "WebFetch(domain:overpass.openstreetmap.ru)",
+      "WebFetch(domain:photon.komoot.io)",
+      "WebFetch(domain:nominatim.openstreetmap.org)"
+    ]
+  }
+}

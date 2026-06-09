@@ -9,6 +9,7 @@ import { ExercisesModule } from './exercises/exercises.module';
 import { UsersModule } from './users/users.module';
 import { WorkoutsModule } from './workouts/workouts.module';
 import { TrainingSessionsModule } from './training-session/entities/training-session.module';
+import { GymsModule } from './gyms/gyms.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { TrainingSessionsModule } from './training-session/entities/training-ses
     WorkoutsModule,
     ExercisesModule,
     TrainingSessionsModule,
+    GymsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
