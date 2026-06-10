@@ -15,6 +15,7 @@ import GymMapPage from './pages/GymMapPage';
 import AdminPage from './pages/AdminPage';
 import CollectiblesPage from './pages/CollectiblesPage';
 import AchievementsPage from './pages/AchievementsPage';
+import OAuthCallbackPage from './pages/OAuthCallbackPage';
 
 import './App.css';
 
@@ -30,6 +31,7 @@ function App() {
       <div className="auth-container">
         <Routes>
           <Route path="/login" element={!me ? <LoginPage /> : <Navigate to="/dashboard" />} />
+          <Route path="/auth/callback" element={<OAuthCallbackPage />} />
 
           <Route
             path="/dashboard"

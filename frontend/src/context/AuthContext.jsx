@@ -23,8 +23,6 @@ export function AuthProvider({ children }) {
       try {
         const meResponse = await api.get('/auth/me');
         if (mounted) setMe(meResponse.data);
-
-        // Precarga no bloqueante del mapa al tener sesion.
         preloadLeaflet();
       } catch {
         localStorage.removeItem('accessToken');
@@ -36,9 +34,7 @@ export function AuthProvider({ children }) {
 
     bootstrapAuth();
 
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, []);
 
   const login = async (email, password) => {
@@ -47,15 +43,13 @@ export function AuthProvider({ children }) {
     try {
       const { data } = await api.post('/auth/login', { email, password });
       localStorage.setItem('accessToken', data.accessToken);
-
       const meResponse = await api.get('/auth/me');
       setMe(meResponse.data);
-
       preloadLeaflet();
       return { success: true };
     } catch (err) {
       const msg = err?.response?.data?.message;
-      const errorMsg = Array.isArray(msg) ? msg.join(', ') : msg || 'No se pudo iniciar sesion';
+      const errorMsg = Array.isArray(msg) ? msg.join(', ') : msg || 'No se pudo iniciar sesión';
       setError(errorMsg);
       return { success: false, error: errorMsg };
     } finally {
@@ -70,15 +64,32 @@ export function AuthProvider({ children }) {
       await api.post('/users', { name, email, password });
       const { data } = await api.post('/auth/login', { email, password });
       localStorage.setItem('accessToken', data.accessToken);
-
       const meResponse = await api.get('/auth/me');
       setMe(meResponse.data);
-
       preloadLeaflet();
       return { success: true };
     } catch (err) {
       const msg = err?.response?.data?.message;
       const errorMsg = Array.isArray(msg) ? msg.join(', ') : msg || 'No se pudo registrar';
+      setError(errorMsg);
+      return { success: false, error: errorMsg };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loginWithToken = async (token) => {
+    setLoading(true);
+    try {
+      localStorage.setItem('accessToken', token);
+      const meResponse = await api.get('/auth/me');
+      setMe(meResponse.data);
+      preloadLeaflet();
+      return { success: true };
+    } catch (err) {
+      localStorage.removeItem('accessToken');
+      const msg = err?.response?.data?.message;
+      const errorMsg = Array.isArray(msg) ? msg.join(', ') : msg || 'Error al iniciar sesión';
       setError(errorMsg);
       return { success: false, error: errorMsg };
     } finally {
@@ -115,6 +126,7 @@ export function AuthProvider({ children }) {
     authReady,
     login,
     register,
+    loginWithToken,
     logout,
     deleteMyAccount,
   };

@@ -14,7 +14,10 @@
       "Bash(cd C:/Users/lucho/ChoppedApp/backend && npm install @nestjs/schedule nodemailer && npm install -D @types/nodemailer 2>&1 | tail -5)",
       "Bash(cd C:/Users/lucho/ChoppedApp/backend && npx tsc --noEmit 2>&1)",
       "Bash(cd C:/Users/lucho/ChoppedApp/backend && npx tsc --noEmit 2>&1 && echo \"BACKEND OK\")",
-      "Bash(cd C:/Users/lucho/ChoppedApp/frontend && npx react-scripts build 2>&1 | grep -E \"^\\(ERROR|Failed|Compiled\\)\" | head -5)"
+      "Bash(cd C:/Users/lucho/ChoppedApp/frontend && npx react-scripts build 2>&1 | grep -E \"^\\(ERROR|Failed|Compiled\\)\" | head -5)",
+      "PowerShell(netstat *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Stop-Service *)"
     ]
   }
 }

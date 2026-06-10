@@ -23,8 +23,11 @@ export class User {
   @Column({ type: 'varchar', length: 255, unique: true })
   email!: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  passwordHash!: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  passwordHash!: string | null;
+
+  @Column({ type: 'varchar', length: 255, nullable: true, unique: true })
+  googleId!: string | null;
 
   @Column({ type: 'boolean', default: false })
   isAdmin!: boolean;

@@ -115,4 +115,35 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { email } });
   }
+
+  async findOrCreateFromGoogle(profile: {
+    googleId: string;
+    email: string;
+    name: string;
+    profileImageUrl: string | null;
+  }): Promise<User> {
+    let user = await this.usersRepository.findOne({ where: { googleId: profile.googleId } });
+
+    if (!user) {
+      user = await this.usersRepository.findOne({ where: { email: profile.email } });
+    }
+
+    if (user) {
+      if (!user.googleId) {
+        user.googleId = profile.googleId;
+        await this.usersRepository.save(user);
+      }
+      return user;
+    }
+
+    const newUser = this.usersRepository.create({
+      googleId: profile.googleId,
+      email: profile.email,
+      name: profile.name,
+      profileImageUrl: profile.profileImageUrl,
+      passwordHash: null,
+    });
+
+    return this.usersRepository.save(newUser);
+  }
 }
