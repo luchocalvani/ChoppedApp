@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import PRESET_WORKOUTS from '../data/presetWorkouts';
 import ExerciseGif from '../components/ExerciseGif';
+import WorkoutCalendar from '../components/WorkoutCalendar';
 import '../styles/Workouts.css';
 
 const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
@@ -13,7 +14,7 @@ export default function WorkoutsPage() {
   const [loading, setLoading] = useState(false);
   const [creatingFromPresetId, setCreatingFromPresetId] = useState('');
   const [error, setError] = useState('');
-  const [section, setSection] = useState('mine'); // mine | preset
+  const [section, setSection] = useState('mine'); // mine | preset | calendar
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [inProgress, setInProgress] = useState([]);
 
@@ -228,6 +229,12 @@ export default function WorkoutsPage() {
           >
             Rutinas predefinidas
           </button>
+          <button
+            className={`switch-btn ${section === 'calendar' ? 'active' : ''}`}
+            onClick={() => setSection('calendar')}
+          >
+            Calendario
+          </button>
         </div>
 
         {loading ? (
@@ -256,6 +263,16 @@ export default function WorkoutsPage() {
                 <div className="workouts-grid">
                   {PRESET_WORKOUTS.map((w) => renderWorkoutCard(w, true))}
                 </div>
+              </section>
+            )}
+
+            {section === 'calendar' && (
+              <section className="workouts-section">
+                <h2 className="section-title">Calendario de rutinas</h2>
+                <p className="section-subtitle">
+                  Rutinas programadas segun los dias y horarios que configuraste.
+                </p>
+                <WorkoutCalendar workouts={myWorkouts} />
               </section>
             )}
           </>

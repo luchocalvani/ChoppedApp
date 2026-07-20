@@ -104,6 +104,19 @@ export default function DashboardPage() {
           </div>
         </button>
 
+        <button className="dashboard-item" onClick={() => navigate('/ranking')}>
+          <div className="item-inner">
+            <div className="item-left">
+              <span className="item-icon">🏆</span>
+              <div>
+                <div className="item-label">Ranking</div>
+                <div className="item-sub">Usuarios por nivel y XP</div>
+              </div>
+            </div>
+            <span className="item-arrow">›</span>
+          </div>
+        </button>
+
         <button className="dashboard-item" onClick={() => navigate('/gym-map')}>
             <div className="item-inner">
                 <div className="item-left">

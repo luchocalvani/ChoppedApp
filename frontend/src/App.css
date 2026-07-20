@@ -425,6 +425,12 @@ body {
   border-color: rgba(40, 118, 212, 0.3);
 }
 
+/* Workout in-progress card */
+[data-theme="light"] .workout-card-inprogress {
+  background: rgba(255, 170, 0, 0.06);
+  border-color: rgba(255, 170, 0, 0.35);
+}
+
 /* Generic ghost / input backgrounds */
 [data-theme="light"] .ghost-btn,
 [data-theme="light"] .switch-btn,

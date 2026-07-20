@@ -9,6 +9,7 @@ import {
   ParseUUIDPipe,
   UseGuards,
   Req,
+  Query,
   ForbiddenException,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -16,6 +17,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { RankingResponseDto } from './dto/ranking-response.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 
@@ -36,6 +38,21 @@ export class UsersController {
   @Get()
   findAll(): Promise<UserResponseDto[]> {
     return this.usersService.findAll();
+  }
+
+  // Cualquier usuario autenticado puede ver el ranking (nivel/xp, sin datos sensibles)
+  @UseGuards(JwtAuthGuard)
+  @Get('ranking')
+  getRanking(
+    @Req() req: Request & { user: AuthUser },
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string,
+  ): Promise<RankingResponseDto> {
+    return this.usersService.getRanking(
+      req.user.userId,
+      page ? Number(page) : 1,
+      pageSize ? Number(pageSize) : 10,
+    );
   }
 
   // Propio usuario o admin

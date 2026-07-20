@@ -1,0 +1,130 @@
+.ranking-container {
+  min-height: 100vh;
+  padding: 28px 20px;
+  background: var(--bg-primary);
+  position: relative;
+}
+
+.ranking-header {
+  max-width: 800px;
+  margin: 0 auto 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ranking-header h1 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.ranking-my-position {
+  max-width: 800px;
+  margin: 0 auto 16px;
+  color: var(--blue-light);
+  font-size: 14px;
+}
+
+.ranking-my-position strong {
+  color: var(--blue-bright);
+  font-size: 16px;
+}
+
+.ranking-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: grid;
+  gap: 8px;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 44px 40px 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+}
+
+.ranking-row-me {
+  border-color: var(--blue-bright);
+  background: rgba(61, 139, 239, 0.1);
+}
+
+.ranking-rank {
+  font-weight: 800;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.ranking-avatar,
+.ranking-avatar-fallback {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ranking-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 16px;
+}
+
+.ranking-name-col {
+  min-width: 0;
+}
+
+.ranking-name {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.ranking-level {
+  color: var(--blue-bright);
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.ranking-xp {
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.ranking-pagination {
+  max-width: 800px;
+  margin: 18px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.ranking-page-label {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 520px) {
+  .ranking-row {
+    grid-template-columns: 32px 32px 1fr auto;
+  }
+
+  .ranking-xp {
+    display: none;
+  }
+}

@@ -11,6 +11,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { RankingResponseDto } from './dto/ranking-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -110,6 +111,45 @@ export class UsersService {
 
     await this.usersRepository.remove(user);
     return { message: `Usuario ${id} eliminado correctamente` };
+  }
+
+  async getRanking(
+    requestingUserId: string,
+    page = 1,
+    pageSize = 10,
+  ): Promise<RankingResponseDto> {
+    const safePage = Math.max(1, Math.floor(page) || 1);
+    const safePageSize = Math.min(50, Math.max(1, Math.floor(pageSize) || 10));
+    const skip = (safePage - 1) * safePageSize;
+
+    const [users, total] = await this.usersRepository.findAndCount({
+      order: { level: 'DESC', xp: 'DESC' },
+      skip,
+      take: safePageSize,
+    });
+
+    const items = users.map((user, idx) => ({
+      id: user.id,
+      alias: user.alias,
+      name: user.name,
+      profileImageUrl: user.profileImageUrl,
+      level: user.level,
+      xp: user.xp,
+      rank: skip + idx + 1,
+    }));
+
+    let myRank: number | null = null;
+    const me = await this.usersRepository.findOne({ where: { id: requestingUserId } });
+    if (me) {
+      const higherCount = await this.usersRepository
+        .createQueryBuilder('u')
+        .where('u.level > :level', { level: me.level })
+        .orWhere('u.level = :level AND u.xp > :xp', { level: me.level, xp: me.xp })
+        .getCount();
+      myRank = higherCount + 1;
+    }
+
+    return { items, total, page: safePage, pageSize: safePageSize, myRank };
   }
 
   async findByEmail(email: string): Promise<User | null> {

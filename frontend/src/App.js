@@ -15,6 +15,7 @@ import GymMapPage from './pages/GymMapPage';
 import AdminPage from './pages/AdminPage';
 import CollectiblesPage from './pages/CollectiblesPage';
 import AchievementsPage from './pages/AchievementsPage';
+import RankingPage from './pages/RankingPage';
 import OAuthCallbackPage from './pages/OAuthCallbackPage';
 
 import './App.css';
@@ -127,6 +128,14 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={!!me}>
                 <AchievementsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ranking"
+            element={
+              <ProtectedRoute isAuthenticated={!!me}>
+                <RankingPage />
               </ProtectedRoute>
             }
           />

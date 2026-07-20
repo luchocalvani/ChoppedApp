@@ -1,0 +1,84 @@
+databases:
+  - name: chopped-db
+    databaseName: chopped
+    plan: free
+
+services:
+  # Backend NestJS
+  - type: web
+    name: chopped-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: DB_HOST
+        fromDatabase:
+          name: chopped-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: chopped-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: chopped-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: chopped-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: chopped-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      # Reemplazar por la URL real del static site una vez creado (ver guia de deploy)
+      - key: FRONTEND_URL
+        value: https://chopped-frontend.onrender.com
+      # Cargar manualmente en el dashboard de Render (Google Cloud Console)
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      # Reemplazar <backend-url> por la URL real del backend una vez creado
+      - key: GOOGLE_CALLBACK_URL
+        value: https://chopped-backend.onrender.com/auth/google/callback
+      # Opcional: recordatorios por mail. Si se dejan vacios, MailService los desactiva sin romper nada.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_SECURE
+        value: false
+      - key: SMTP_FROM
+        sync: false
+
+  # Frontend React (build estatico)
+  - type: web
+    name: chopped-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Reemplazar por la URL real del backend una vez creado
+      - key: REACT_APP_API_URL
+        value: https://chopped-backend.onrender.com
+      # Cargar manualmente en el dashboard de Render (misma key que frontend/.env)
+      - key: REACT_APP_GOOGLE_MAPS_KEY
+        sync: false

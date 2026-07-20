@@ -104,6 +104,16 @@ export default function TrainWorkoutPage() {
     );
   };
 
+  const stepEntry = (exerciseId, field, delta) => {
+    setEntries((prev) =>
+      prev.map((e) => {
+        if (e.exerciseId !== exerciseId) return e;
+        const next = Math.max(0, Number((e[field] + delta).toFixed(2)));
+        return { ...e, [field]: next };
+      }),
+    );
+  };
+
   const abandon = () => {
     localStorage.removeItem(storageKey(id));
     navigate('/workouts');
@@ -172,25 +182,63 @@ export default function TrainWorkoutPage() {
               <ExerciseGif exercise={e} alt={e.name} className="train-gif" />
 
               <div className="marks-col">
-                <label>
-                  Reps hechas
-                  <input
-                    type="number"
-                    min="0"
-                    value={e.repsDone}
-                    onChange={(ev) => updateEntry(e.exerciseId, 'repsDone', ev.target.value)}
-                  />
-                </label>
-                <label>
-                  Peso (kg)
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={e.weightKg}
-                    onChange={(ev) => updateEntry(e.exerciseId, 'weightKg', ev.target.value)}
-                  />
-                </label>
+                <div className="counter-field">
+                  <span className="counter-label">Reps hechas</span>
+                  <div className="counter-control">
+                    <button
+                      type="button"
+                      className="counter-btn"
+                      onClick={() => stepEntry(e.exerciseId, 'repsDone', -1)}
+                      aria-label="Restar repeticion"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min="0"
+                      className="counter-input"
+                      value={e.repsDone}
+                      onChange={(ev) => updateEntry(e.exerciseId, 'repsDone', ev.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="counter-btn"
+                      onClick={() => stepEntry(e.exerciseId, 'repsDone', 1)}
+                      aria-label="Sumar repeticion"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="counter-field">
+                  <span className="counter-label">Peso (kg)</span>
+                  <div className="counter-control">
+                    <button
+                      type="button"
+                      className="counter-btn"
+                      onClick={() => stepEntry(e.exerciseId, 'weightKg', -2.5)}
+                      aria-label="Restar peso"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      className="counter-input"
+                      value={e.weightKg}
+                      onChange={(ev) => updateEntry(e.exerciseId, 'weightKg', ev.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="counter-btn"
+                      onClick={() => stepEntry(e.exerciseId, 'weightKg', 2.5)}
+                      aria-label="Sumar peso"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
