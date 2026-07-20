@@ -53,6 +53,9 @@ services:
       # Usada por GymsService para buscar gimnasios via Places API (New) del lado del servidor
       - key: GOOGLE_MAPS_KEY
         sync: false
+      # Usada por AiWorkoutsService para generar rutinas con Gemini
+      - key: GEMINI_API_KEY
+        sync: false
       # Opcional: recordatorios por mail. Si se dejan vacios, MailService los desactiva sin romper nada.
       - key: SMTP_HOST
         sync: false
