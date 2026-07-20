@@ -47,9 +47,8 @@ services:
         sync: false
       - key: GOOGLE_CLIENT_SECRET
         sync: false
-      # Reemplazar <backend-url> por la URL real del backend una vez creado
       - key: GOOGLE_CALLBACK_URL
-        value: https://chopped-backend.onrender.com/auth/google/callback
+        value: https://chopped-backend-m3u4.onrender.com/auth/google/callback
       # Usada por GymsService para buscar gimnasios via Places API (New) del lado del servidor
       - key: GOOGLE_MAPS_KEY
         sync: false
@@ -82,9 +81,8 @@ services:
         source: /*
         destination: /index.html
     envVars:
-      # Reemplazar por la URL real del backend una vez creado
       - key: REACT_APP_API_URL
-        value: https://chopped-backend.onrender.com
+        value: https://chopped-backend-m3u4.onrender.com
       # Cargar manualmente en el dashboard de Render (misma key que frontend/.env)
       - key: REACT_APP_GOOGLE_MAPS_KEY
         sync: false
