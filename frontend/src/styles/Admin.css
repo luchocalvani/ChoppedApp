@@ -17,7 +17,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-bottom: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: var(--header-bg-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--border);
 }
 
 .admin-header h1 {

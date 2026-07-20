@@ -28,8 +28,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 1;
+  flex-wrap: wrap;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: var(--header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .workouts-header-actions {
@@ -124,6 +132,16 @@
   font-size: 13px;
   color: var(--text-primary);
   text-align: left;
+}
+
+.exercise-table td:first-child {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.exercise-table td:nth-child(2) {
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
 .exercise-table tr:last-child td {
@@ -242,9 +260,22 @@
 .workout-title {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin: 0;
   color: var(--text-primary);
+}
+
+.scheduled-badge {
+  border: 1px solid rgba(61, 139, 239, 0.45);
+  color: var(--blue-bright);
+  background: rgba(61, 139, 239, 0.12);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .workout-card-preset {
@@ -335,9 +366,9 @@
 }
 
 .workout-schedule-info {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--blue-bright);
-  margin: -4px 0 10px;
+  margin: 0;
   font-weight: 600;
   letter-spacing: 0.03em;
 }

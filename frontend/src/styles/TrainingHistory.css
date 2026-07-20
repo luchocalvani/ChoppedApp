@@ -23,6 +23,14 @@
   gap: 12px;
   margin-bottom: 12px;
   flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: var(--header-bg-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 4px 0 12px;
+  border-bottom: 1px solid var(--border);
 }
 
 .history-top-actions {
@@ -65,6 +73,9 @@
 
 .history-top h1 {
   margin: 0;
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 0.06em;
   color: var(--text-primary);
 }
 
@@ -142,6 +153,11 @@
   border-bottom: 1px solid rgba(61, 139, 239, 0.08);
   color: var(--text-primary);
   font-size: 13px;
+}
+
+.history-table td:first-child {
+  font-weight: 600;
+  font-size: 14px;
 }
 
 @media (max-width: 800px) {

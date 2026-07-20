@@ -107,11 +107,12 @@ export default function ProfilePage() {
     <div className="page-content">
       <div className="profile-container">
         <div className="profile-card">
-          <h2>Mi Perfil</h2>
-
-          <button onClick={() => navigate('/dashboard')} className="back-btn">
-            Volver al dashboard
-          </button>
+          <div className="profile-header">
+            <h2>Mi Perfil</h2>
+            <button onClick={() => navigate('/dashboard')} className="back-btn">
+              Volver al dashboard
+            </button>
+          </div>
 
           {!loading && (
             <div className="profile-stats">

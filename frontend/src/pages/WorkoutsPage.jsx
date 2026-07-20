@@ -95,17 +95,20 @@ export default function WorkoutsPage() {
       <h3 className="workout-title">
         {workout.name}
         {isPreset && <span className="preset-badge">Predeterminada</span>}
+        {!isPreset && workout.scheduleDays?.length > 0 && (
+          <>
+            <span className="scheduled-badge">Programada</span>
+            <span className="workout-schedule-info">
+              {workout.scheduleDays
+                .slice()
+                .sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b))
+                .map((d) => DAY_NAMES[d])
+                .join(', ')}{' '}
+              · {workout.scheduleTime} hs
+            </span>
+          </>
+        )}
       </h3>
-      {!isPreset && workout.scheduleDays?.length > 0 && (
-        <p className="workout-schedule-info">
-          {workout.scheduleDays
-            .slice()
-            .sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b))
-            .map((d) => DAY_NAMES[d])
-            .join(', ')}{' '}
-          · {workout.scheduleTime} hs
-        </p>
-      )}
 
       <table className="exercise-table">
         <thead>

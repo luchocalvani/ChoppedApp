@@ -11,6 +11,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: var(--header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .ranking-header h1 {
@@ -19,6 +27,23 @@
   letter-spacing: 0.08em;
   color: var(--text-primary);
   line-height: 1;
+}
+
+.ghost-btn {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 11px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+}
+
+[data-theme="light"] .ghost-btn {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .ranking-my-position {

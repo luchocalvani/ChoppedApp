@@ -302,6 +302,17 @@
   vertical-align: middle;
 }
 
+.exercise-table td:first-child {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.exercise-table td:nth-child(2),
+.exercise-table td:nth-child(3) {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .table-gif {
   width: 74px;
   height: 54px;

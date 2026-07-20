@@ -33,6 +33,8 @@
 
   /* Theme-specific */
   --nav-bg: rgba(10, 22, 40, 0.92);
+  --header-bg: rgba(10, 22, 40, 0.82);
+  --header-bg-card: rgba(17, 31, 53, 0.82);
 }
 
 * {
@@ -49,6 +51,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Base tipografico: cubre titulos que alguna pantalla se olvido de estilizar
+   (quedaban con el h1/h2 crudo del navegador). Las reglas mas especificas de
+   cada pagina siguen ganando por especificidad, esto es solo el piso. */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+p {
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* Los controles de formulario y las tablas no heredan la tipografia del
+   body por defecto en los navegadores (comportamiento estandar del user
+   agent stylesheet) -- por eso quedaban con la fuente del sistema en vez
+   de DM Sans (inputs, selects, contadores de reps/peso, tablas, etc). */
+button, input, select, textarea, table {
+  font-family: inherit;
+}
+
 /* ─── Auth / Login ──────────────────────────────────────── */
 
 .auth-container {
@@ -59,7 +85,6 @@ body {
   background: var(--blue-darker);
   position: relative;
   padding: 20px;
-  overflow: hidden;
 }
 
 /* Grid texture */
@@ -392,6 +417,8 @@ body {
   --shadow-blue:    0 8px 32px rgba(40, 118, 212, 0.15);
   --shadow-blue-sm: 0 4px 12px rgba(40, 118, 212, 0.1);
   --nav-bg:         rgba(240, 244, 250, 0.95);
+  --header-bg:      rgba(240, 244, 250, 0.85);
+  --header-bg-card: rgba(255, 255, 255, 0.85);
 }
 
 /* Nav */
