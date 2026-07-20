@@ -10,16 +10,21 @@ function normalize(url) {
 }
 
 function buildCandidates(exercise) {
-  const direct = normalize(exercise?.gifUrl || '');
+  const apiBase = (process.env.REACT_APP_API_URL || 'http://localhost:3001').replace(
+    /\/+$/,
+    '',
+  );
+  const raw = (exercise?.gifUrl || '').trim();
   const id = (exercise?.exerciseId || '').trim();
 
-  const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:3001';
   const out = [];
 
-  if (direct) out.push(direct);
-  if (id) {
-    out.push(`${apiBase}/exercises/gif/${id}`);
-  }
+  // Si la URL ya apunta a nuestro backend, se usa tal cual. Forzarla a https
+  // rompe en desarrollo (el backend local es http) y en produccion el esquema
+  // correcto ya viene dado por REACT_APP_API_URL. El upgrade a https solo
+  // aplica a URLs externas, donde evita mixed content.
+  if (raw) out.push(raw.startsWith(apiBase) ? raw : normalize(raw));
+  if (id) out.push(`${apiBase}/exercises/gif/${id}`);
 
   return [...new Set(out)];
 }

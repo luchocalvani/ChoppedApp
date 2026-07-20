@@ -19,6 +19,50 @@ export default function CreateWorkoutPage() {
   const [scheduleDays, setScheduleDays] = useState([]);
   const [scheduleTime, setScheduleTime] = useState('08:00');
 
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiNotice, setAiNotice] = useState('');
+
+  // Genera una rutina con IA y precarga el formulario. El usuario despues
+  // puede editarla y la guarda con el boton "Crear Rutina" de siempre.
+  const generateWithAi = async () => {
+    if (!aiPrompt.trim()) return;
+    setAiLoading(true);
+    setAiNotice('');
+    setError('');
+
+    try {
+      const { data } = await api.post('/ai-workouts/generate', {
+        prompt: aiPrompt.trim(),
+      });
+
+      setWorkoutName(data.name || '');
+      setSelectedExercises(
+        (data.exercises || []).map((ex) => ({
+          exerciseId: ex.exerciseId,
+          name: ex.name,
+          bodyPart: ex.bodyPart || '',
+          equipment: ex.equipment || '',
+          target: ex.target || '',
+          gifUrl: ex.gifUrl || '',
+        })),
+      );
+
+      setAiNotice(
+        data.generatedByAi
+          ? `Listo: ${data.exercises.length} ejercicios. Podes editarlos antes de guardar.`
+          : 'La IA no respondio, asi que armamos una rutina base. Podes editarla igual.',
+      );
+    } catch (err) {
+      const msg = err?.response?.data?.message;
+      setError(
+        Array.isArray(msg) ? msg.join(', ') : msg || 'No se pudo generar la rutina',
+      );
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   const searchExercises = async () => {
     if (!search.trim()) return;
     setSearching(true);
@@ -109,6 +153,41 @@ export default function CreateWorkoutPage() {
           <h2>Crear Nueva Rutina</h2>
 
           <form className="create-workout-form" onSubmit={handleSubmit}>
+            <div className="ai-box">
+              <h3>Generar con IA</h3>
+              <div className="muscle-hint">
+                Escribi que rutina queres y la armamos sola. Ej: "quiero una
+                rutina de pecho y hombro"
+              </div>
+
+              <div className="ai-row">
+                <input
+                  type="text"
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      generateWithAi();
+                    }
+                  }}
+                  placeholder='Ej: quiero una rutina de pecho y hombro'
+                  className="form-input"
+                  disabled={aiLoading}
+                />
+                <button
+                  type="button"
+                  onClick={generateWithAi}
+                  className="ai-btn"
+                  disabled={aiLoading || !aiPrompt.trim()}
+                >
+                  {aiLoading ? 'Generando...' : 'Generar'}
+                </button>
+              </div>
+
+              {aiNotice && <p className="ai-notice">{aiNotice}</p>}
+            </div>
+
             <div className="form-group">
               <label>Nombre de la rutina *</label>
               <input

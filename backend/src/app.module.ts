@@ -14,6 +14,7 @@ import { GymsModule } from './gyms/gyms.module';
 import { StoreModule } from './store/store.module';
 import { AchievementsModule } from './achievements/achievements.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
+import { AiWorkoutsModule } from './ai-workouts/ai-workouts.module';
 import { DbLogger } from './db-logger';
 
 @Module({
@@ -48,6 +49,7 @@ import { DbLogger } from './db-logger';
     StoreModule,
     AchievementsModule,
     SchedulerModule,
+    AiWorkoutsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
