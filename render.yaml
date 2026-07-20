@@ -50,6 +50,9 @@ services:
       # Reemplazar <backend-url> por la URL real del backend una vez creado
       - key: GOOGLE_CALLBACK_URL
         value: https://chopped-backend.onrender.com/auth/google/callback
+      # Usada por GymsService para buscar gimnasios via Places API (New) del lado del servidor
+      - key: GOOGLE_MAPS_KEY
+        sync: false
       # Opcional: recordatorios por mail. Si se dejan vacios, MailService los desactiva sin romper nada.
       - key: SMTP_HOST
         sync: false
