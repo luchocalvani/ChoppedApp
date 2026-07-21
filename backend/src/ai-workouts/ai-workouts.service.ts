@@ -37,8 +37,78 @@ const MUSCLE_GROUPS: Array<{ canonical: string; synonyms: string[] }> = [
   { canonical: 'pantorrillas', synonyms: ['pantorrilla', 'gemelo'] },
 ];
 
-const EXERCISES_PER_GROUP = 3;
+// Cuantos ejercicios por grupo cuando el usuario no aclara una cantidad.
+const DEFAULT_PER_GROUP = 3;
+// Tope de seguridad para que un pedido absurdo no genere una rutina enorme.
+const MAX_TOTAL_EXERCISES = 20;
+// Cuantos candidatos reales traemos de cada grupo para que el modelo elija.
 const CANDIDATES_PER_GROUP = 25;
+
+// Ejercicios de referencia para PRINCIPIANTES por grupo (nombres en espanol).
+// Se le pasan a Gemini como guia: cuando el usuario pide nivel principiante,
+// prioriza los equivalentes del catalogo a estos ejercicios simples/de maquina.
+const BEGINNER_REFERENCE: Record<string, string[]> = {
+  pecho: [
+    'Press de banca',
+    'Press en maquina (Chest Press)',
+    'Aperturas en maquina (Pec Deck)',
+    'Flexiones (Push-ups)',
+  ],
+  espalda: [
+    'Jalon al pecho (Lat Pulldown)',
+    'Remo sentado en polea',
+    'Remo en maquina',
+    'Dominadas asistidas',
+  ],
+  hombros: [
+    'Press de hombros en maquina',
+    'Press con mancuernas',
+    'Elevaciones laterales',
+    'Aperturas para deltoides posterior',
+  ],
+  piernas: [
+    'Prensa de piernas',
+    'Sentadillas',
+    'Extension de cuadriceps',
+    'Curl femoral',
+  ],
+  gluteos: [
+    'Hip Thrust',
+    'Patada de gluteo en maquina o polea',
+    'Peso muerto rumano',
+    'Abduccion de cadera en maquina',
+  ],
+  biceps: [
+    'Curl con mancuernas',
+    'Curl con barra EZ',
+    'Curl predicador',
+    'Curl en polea',
+  ],
+  triceps: [
+    'Extension en polea (Pushdown)',
+    'Extension por encima de la cabeza',
+    'Fondos en banco',
+    'Maquina de triceps',
+  ],
+  abdominales: [
+    'Plancha',
+    'Crunch en maquina',
+    'Crunch en polea',
+    'Elevacion de rodillas',
+  ],
+};
+
+// Palabras que indican que el usuario quiere una rutina para principiantes.
+const BEGINNER_HINTS = [
+  'principiante',
+  'principiantes',
+  'basico',
+  'basica',
+  'novato',
+  'iniciante',
+  'empezando',
+  'recien empiezo',
+];
 
 // flash-lite: alcanza de sobra para elegir de una lista, responde en ~2s
 // (los modelos grandes tardan ~25s) y tiene una cuota gratuita mas generosa.
@@ -95,6 +165,12 @@ export class AiWorkoutsService {
     ).map((group) => group.canonical);
   }
 
+  // Detecta si el usuario pidio nivel principiante.
+  private isBeginner(prompt: string): boolean {
+    const normalized = this.normalizeText(prompt);
+    return BEGINNER_HINTS.some((hint) => normalized.includes(hint));
+  }
+
   // Trae los ejercicios reales de cada grupo. Estos son los unicos que
   // se pueden elegir: el modelo nunca inventa ejercicios.
   private async buildCatalog(
@@ -135,6 +211,7 @@ export class AiWorkoutsService {
     prompt: string,
     groups: string[],
     catalog: Record<string, CatalogExercise[]>,
+    beginner: boolean,
   ): string {
     const catalogText = groups
       .map((group) => {
@@ -145,22 +222,49 @@ export class AiWorkoutsService {
       })
       .join('\n\n');
 
-    return [
+    const lines = [
       `Sos un entrenador armando una rutina de gimnasio.`,
       ``,
       `Pedido del usuario: "${prompt}"`,
       ``,
-      `Catalogo de ejercicios disponibles:`,
+      `Catalogo de ejercicios disponibles (solo podes elegir de aca):`,
       catalogText,
       ``,
       `Instrucciones:`,
-      `- Elegi exactamente ${EXERCISES_PER_GROUP} ejercicios de CADA grupo listado.`,
-      `- Dentro de cada grupo deben ser VARIADOS entre si: distinto equipamiento`,
-      `  y distinto angulo/movimiento. Evita elegir tres variantes casi iguales.`,
-      `- Solo podes usar exerciseId que aparezcan en el catalogo de arriba.`,
-      `  No inventes ids.`,
+      `- Respeta la CANTIDAD de ejercicios que pide el usuario para cada grupo.`,
+      `  Por ejemplo "3 de pecho y 2 de hombro" = 3 de pecho y 2 de hombro.`,
+      `  Si no aclara una cantidad para un grupo, elegi ${DEFAULT_PER_GROUP}.`,
+      `- Dentro de cada grupo, elegi ejercicios VARIADOS entre si (distinto`,
+      `  equipamiento y angulo/movimiento). Evita variantes casi iguales.`,
+      `- Solo podes usar exerciseId que aparezcan en el catalogo. No inventes ids.`,
+      `- Devolve "ejercicios" en el orden en que irian en la rutina`,
+      `  (agrupados por grupo muscular).`,
       `- "nombreRutina": un nombre corto en espanol para la rutina.`,
-    ].join('\n');
+    ];
+
+    if (beginner) {
+      const beginnerRef = groups
+        .filter((group) => BEGINNER_REFERENCE[group])
+        .map((group) => `  - ${group}: ${BEGINNER_REFERENCE[group].join(', ')}`)
+        .join('\n');
+
+      lines.push(
+        ``,
+        `IMPORTANTE: el usuario pide nivel PRINCIPIANTE. Priorizá ejercicios`,
+        `simples, de maquina o basicos. Evita variantes inestables o avanzadas`,
+        `(bosu, banco de equilibrio, a un solo brazo/pierna, con salto, etc.).`,
+      );
+
+      if (beginnerRef) {
+        lines.push(
+          `Como referencia, estos son ejercicios apropiados para principiantes;`,
+          `elegi del catalogo los equivalentes mas parecidos:`,
+          beginnerRef,
+        );
+      }
+    }
+
+    return lines.join('\n');
   }
 
   // Llama a Gemini. Devuelve null ante cualquier problema (sin key, timeout,
@@ -169,6 +273,7 @@ export class AiWorkoutsService {
     prompt: string,
     groups: string[],
     catalog: Record<string, CatalogExercise[]>,
+    beginner: boolean,
   ): Promise<GeminiChoice | null> {
     const apiKey = this.configService.get<string>('GEMINI_API_KEY');
     if (!apiKey) {
@@ -178,7 +283,11 @@ export class AiWorkoutsService {
 
     const body = JSON.stringify({
       contents: [
-        { parts: [{ text: this.buildGeminiPrompt(prompt, groups, catalog) }] },
+        {
+          parts: [
+            { text: this.buildGeminiPrompt(prompt, groups, catalog, beginner) },
+          ],
+        },
       ],
       generationConfig: {
         responseMimeType: 'application/json',
@@ -257,29 +366,46 @@ export class AiWorkoutsService {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  // Toma los ids elegidos por el modelo y arma la lista final.
-  // Descarta los ids que no existan en el catalogo (el modelo no puede
-  // meter ejercicios inventados) y completa si eligio de menos.
-  private resolveSelection(
-    groups: string[],
+  // Valida los ids elegidos por el modelo contra el catalogo real: descarta los
+  // que no existan (el modelo no puede meter ejercicios inventados) y los
+  // repetidos, respetando el orden y la cantidad que eligio la IA.
+  private validateChosen(
     catalog: Record<string, CatalogExercise[]>,
     chosenIds: string[],
   ): CatalogExercise[] {
-    const chosen = new Set(chosenIds);
-    // Grupos que se solapan (brazos/biceps, piernas/gluteos) comparten
-    // ejercicios, asi que hay que evitar repetirlos en la misma rutina.
+    const byId = new Map<string, CatalogExercise>();
+    for (const group of Object.keys(catalog)) {
+      for (const exercise of catalog[group]) {
+        if (!byId.has(exercise.exerciseId)) byId.set(exercise.exerciseId, exercise);
+      }
+    }
+
+    const seen = new Set<string>();
+    const result: CatalogExercise[] = [];
+    for (const id of chosenIds) {
+      const exercise = byId.get(id);
+      if (exercise && !seen.has(id)) {
+        seen.add(id);
+        result.push(exercise);
+      }
+    }
+
+    return result.slice(0, MAX_TOTAL_EXERCISES);
+  }
+
+  // Seleccion de respaldo cuando Gemini no responde: DEFAULT_PER_GROUP por
+  // grupo, sin repetir ejercicios entre grupos que se solapan.
+  private fallbackSelection(
+    groups: string[],
+    catalog: Record<string, CatalogExercise[]>,
+  ): CatalogExercise[] {
     const used = new Set<string>();
 
     return groups.flatMap((group) => {
-      const candidates = (catalog[group] ?? []).filter(
-        (e) => !used.has(e.exerciseId),
-      );
-      const picked = candidates.filter((e) => chosen.has(e.exerciseId));
-      const rest = candidates.filter((e) => !chosen.has(e.exerciseId));
-
-      const selected = [...picked, ...rest].slice(0, EXERCISES_PER_GROUP);
+      const selected = (catalog[group] ?? [])
+        .filter((e) => !used.has(e.exerciseId))
+        .slice(0, DEFAULT_PER_GROUP);
       selected.forEach((e) => used.add(e.exerciseId));
-
       return selected;
     });
   }
@@ -301,16 +427,23 @@ export class AiWorkoutsService {
       );
     }
 
-    const choice = await this.pickWithGemini(prompt, groups, catalog);
+    const beginner = this.isBeginner(prompt);
+    const choice = await this.pickWithGemini(prompt, groups, catalog, beginner);
 
-    // Si Gemini fallo o se colgo, igual devolvemos una rutina valida.
-    const exercises = this.resolveSelection(groups, catalog, choice?.ids ?? []);
+    // La IA sirve si respondio Y sus ejercicios pasaron la validacion.
+    const aiExercises = choice ? this.validateChosen(catalog, choice.ids) : [];
+    const usedAi = aiExercises.length > 0;
+
+    // Si la IA fallo, igual devolvemos una rutina valida de respaldo.
+    const exercises = usedAi
+      ? aiExercises
+      : this.fallbackSelection(groups, catalog);
 
     return {
-      name: choice?.name || this.buildName(groups),
+      name: (usedAi && choice?.name) || this.buildName(groups),
       exercises,
       detectedGroups: groups,
-      generatedByAi: choice !== null,
+      generatedByAi: usedAi,
     };
   }
 }

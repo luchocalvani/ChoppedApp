@@ -17,7 +17,7 @@ export default function DashboardPage() {
     <div className="dashboard-container">
       <section className="dashboard-hero">
         <h1 className="dashboard-logo">
-          C<span className="logo-h">H<span className="logo-icon" /></span>OPPEDAPP
+          C<span className="logo-h">H</span>OPPEDAPP
         </h1>
         <p className="dashboard-tagline">Fitness tracker</p>
           <button className="theme-toggle-btn" onClick={toggleTheme} title="Cambiar tema">
