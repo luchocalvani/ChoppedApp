@@ -27,6 +27,7 @@ function calcLevel(xp: number): number {
 }
 
 function pointsForReps(reps: number): number {
+  if (reps < 3) return 0;
   if (reps < 6) return 1;
   if (reps <= 8) return 2;
   return 3;
